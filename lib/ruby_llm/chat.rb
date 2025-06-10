@@ -71,6 +71,11 @@ module RubyLLM
       self
     end
 
+    def with_thinking_budget(thinking_budget)
+      @thinking_budget = thinking_budget
+      self
+    end
+
     def with_context(context)
       @context = context
       @config = context.config
@@ -100,6 +105,7 @@ module RubyLLM
         temperature: @temperature,
         model: @model.id,
         connection: @connection,
+        thinking_budget: @thinking_budget,
         &
       )
       @on[:end_message]&.call(response)

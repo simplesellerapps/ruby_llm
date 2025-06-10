@@ -11,13 +11,15 @@ module RubyLLM
           "models/#{@model}:generateContent"
         end
 
-        def render_payload(messages, tools:, temperature:, model:, stream: false) # rubocop:disable Lint/UnusedMethodArgument
+        def render_payload(messages, tools:, temperature:, model:, thinking_budget: nil, stream: false) # rubocop:disable Lint/UnusedMethodArgument
           @model = model # Store model for completion_url/stream_url
+          generation_config = {
+            temperature: temperature
+          }
+          generation_config[:thinkingConfig] = {thinkingBudget: thinking_budget} unlessthinking_budget.nil?
           payload = {
             contents: format_messages(messages),
-            generationConfig: {
-              temperature: temperature
-            }
+            generationConfig: generation_config
           }
           payload[:tools] = format_tools(tools) if tools.any?
           payload
@@ -75,6 +77,8 @@ module RubyLLM
             tool_calls: tool_calls,
             input_tokens: data.dig('usageMetadata', 'promptTokenCount'),
             output_tokens: data.dig('usageMetadata', 'candidatesTokenCount'),
+            cache_tokens: data.dig('usageMetadata', 'cachedContentTokenCount'),
+            thoughts_tokens: data.dig('usageMetadata', 'thoughtsTokenCount'),
             model_id: data['modelVersion'] || response.env.url.path.split('/')[3].split(':')[0]
           )
         end
