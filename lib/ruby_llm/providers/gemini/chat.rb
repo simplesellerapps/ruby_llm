@@ -16,7 +16,7 @@ module RubyLLM
           generation_config = {
             temperature: temperature
           }
-          generation_config[:thinkingConfig] = {thinkingBudget: thinking_budget} unlessthinking_budget.nil?
+          generation_config[:thinkingConfig] = {thinkingBudget: thinking_budget} unless thinking_budget.nil?
           payload = {
             contents: format_messages(messages),
             generationConfig: generation_config
