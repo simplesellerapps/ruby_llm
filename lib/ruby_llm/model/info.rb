@@ -66,6 +66,10 @@ module RubyLLM
         pricing.text_tokens.output
       end
 
+      def cached_price_per_million
+        pricing.text_tokens.cached_input
+      end
+
       def type # rubocop:disable Metrics/PerceivedComplexity
         if modalities.output.include?('embeddings') && !modalities.output.include?('text')
           'embedding'
